@@ -667,7 +667,7 @@
 
           // swimmers: only create and draw when explicitly activated by clicking the image
           if (window._stitch && window._stitch.swimmersVisible && !window._stitch.swimmers) {
-            const glyphs = ['𓆝','𓆟','𓆞','𓆝','𓆟'];
+            const glyphs = ['𓆝 ','𓆟 ','𓆞 ','𓆝 ','𓆟 '];
             const swimmers = [];
             const textWidth = ctx.measureText('♡awdrug♡').width;
             const startX = cx - textWidth/2 - 40;
@@ -709,6 +709,8 @@
           ctx.font = '35px "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
+          // per-fish fade parameters
+          const fadeWidth = (sdata && sdata.fadeWidth) ? sdata.fadeWidth : 60; // px
           if (sdata) for (let s of sdata.arr) {
             // update wave phase
             s.phase += s.freq;
@@ -716,7 +718,26 @@
             // small rotation based on derivative of sine (approx)
             const rot = Math.cos(s.phase) * 0.12;
 
+            // compute per-fish alpha: fade-out near left edge and fade-in per appearDelay
+            const globalOpacity = (window._stitch && typeof window._stitch.swimmersOpacity === 'number') ? window._stitch.swimmersOpacity : 1;
+            let fadeOutAlpha = 1;
+            try {
+              const dist = s.x - sdata.startX; // distance from left edge
+              if (dist < fadeWidth) fadeOutAlpha = Math.max(0, dist / fadeWidth);
+            } catch (e) { fadeOutAlpha = 1; }
+            let fadeInAlpha = 1;
+            try {
+              const startTs = (window._stitch && window._stitch.swimmersStart) || 0;
+              const elapsed = Math.max(0, performance.now() - startTs);
+              const localT = Math.max(0, elapsed - (s.appearDelay || 0));
+              const inDur = 350; // ms fade-in per fish
+              fadeInAlpha = Math.min(1, localT / inDur);
+            } catch (e) { fadeInAlpha = 1; }
+            const localAlpha = fadeOutAlpha * fadeInAlpha;
+
             ctx.save();
+            // combine global swimmers opacity with per-fish local alpha
+            ctx.globalAlpha = globalOpacity * localAlpha;
             ctx.translate(s.x, s.y + yOffset);
             ctx.rotate(rot);
             ctx.fillText(s.ch, 0, 0);
@@ -910,11 +931,24 @@
           freq: 0.02 + Math.random() * 0.02
         });
       }
-      window._stitch.swimmers = {arr: swimmers, startX, endX};
+      // add per-fish appearDelay (staggered fade-in) and default fadeWidth
+      const appearBase = 120; // ms between fish
+      for (let i = 0; i < swimmers.length; i++) swimmers[i].appearDelay = i * appearBase;
+      window._stitch.swimmers = {arr: swimmers, startX, endX, fadeWidth: 60};
     } catch (e) {
       // ignore
     }
   }
+
+  // runtime helper to adjust per-fish fade width
+  window.setSwimmerFadeWidth = function(px) {
+    try {
+      if (!window._stitch) window._stitch = {};
+      if (!window._stitch.swimmers) ensureSwimmersExist();
+      if (window._stitch.swimmers) window._stitch.swimmers.fadeWidth = Number(px) || 60;
+      return window._stitch.swimmers.fadeWidth;
+    } catch (e) { return null; }
+  };
 
   function triggerMusicAndSwimmers() {
     try {
@@ -932,6 +966,8 @@
         window._stitch.swimmersFadeTarget = 1.0;
         // ensure swimmers array exists when we begin fading in
         if (!window._stitch.swimmers) ensureSwimmersExist();
+  // record start time for per-fish fade-in
+  window._stitch.swimmersStart = performance.now();
       } else {
         // hide: begin fade-out, pause music without resetting position so it can resume
         window._stitch.swimmersFadeTarget = 0.0;
@@ -961,6 +997,5 @@
   </script>
 </body>
 </html>
-
 
 
