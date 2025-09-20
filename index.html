@@ -18,6 +18,16 @@
       display: block;
     }
   </style>
+  <!-- Local font faces: place font files in `fonts/` (e.g. NotoSansMono-Regular.woff2, NotoSans-Regular.woff2) -->
+  <style>
+    @font-face {
+      font-family: 'Noto Sans Mono Local';
+      src: url('fonts/NotoSansMono-Regular.woff2') format('woff2');
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+  </style>
 </head>
 <body>
   <canvas id="canvas"></canvas>
@@ -151,8 +161,8 @@
     ovCtx.fillStyle = 'rgba(0,0,0,0.15)';
     ovCtx.fillRect(0, 0, overlayCanvas.width, overlayCanvas.height);
 
-    ovCtx.fillStyle = '#34b1eb'; // blue hacker color
-    ovCtx.font = '14px monospace';
+  ovCtx.fillStyle = '#34b1eb'; // blue hacker color
+  ovCtx.font = '14px "Noto Sans Mono Local", "Noto Sans Local", monospace';
     for (let i = 0; i < drops.length; i++) {
       const text = chars.charAt(Math.floor(Math.random() * chars.length));
       const x = i * 16;
@@ -207,7 +217,7 @@
   term.style.padding = '18px';
   term.style.background = 'rgba(0,0,0,0.6)';
   term.style.color = '#34b1eb';
-  term.style.font = '30px "Segoe UI Mono", "Noto Sans Mono", "Roboto Mono", "SFMono-Regular", monospace';
+  term.style.font = '30px "Noto Sans Mono Local", "Noto Sans Local", "Segoe UI Mono", "Noto Sans Mono", monospace';
   term.style.borderRadius = '6px';
   term.style.overflow = 'hidden';
   term.style.minHeight = '120px';
@@ -239,7 +249,7 @@
   const terminalLines = [
     'Khởi động awdrug.exe...',
     'Đang cài đặt gói dễ thương bổ sung...',
-    'Buffer năng lượng tích cực...',
+    'Buffer năng lượng tích cực (đừng tua nha)...',
     'Cài đặt 0909.exe phiên bản vô hạn...',
     'Thêm chút xíu dễ thương awdrug...',
     'Sắp xong rồi, chờ xí...',
@@ -997,6 +1007,5 @@
   </script>
 </body>
 </html>
-
 
 
