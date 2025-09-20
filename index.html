@@ -81,8 +81,8 @@
     // wrapper width for terminal/button area (accepts CSS length like '70%' or '600px')
     wrapperWidth: '70%',
     // when free: CSS left/top values (can be '50%', '120px', etc.)
-    freeX: '28.5%',
-    freeY: '54%',
+    freeX: '21%',
+    freeY: '60%',
     // when free and anchorCenter=true the button will be centered at (freeX,freeY) using transform
     anchorCenter: true
   };
@@ -169,7 +169,7 @@
   const playBtn = document.createElement('button');
   playBtn.textContent = '0909';
   playBtn.setAttribute('aria-label','Play');
-  playBtn.style.fontSize = '16px';
+  playBtn.style.fontSize = '35px';
   playBtn.style.padding = '8px 12px';
   playBtn.style.borderRadius = '100px';
   playBtn.style.border = 'none';
@@ -187,10 +187,10 @@
   function adjustBtnForViewport() {
     const w = (window.visualViewport && window.visualViewport.width) || window.innerWidth;
     if (w < 420) {
-      playBtn.style.fontSize = '14px';
+      playBtn.style.fontSize = '35px';
       playBtn.style.padding = '6px 10px';
     } else {
-      playBtn.style.fontSize = '16px';
+      playBtn.style.fontSize = '35px';
       playBtn.style.padding = '8px 12px';
     }
   }
@@ -201,13 +201,13 @@
   const term = document.createElement('pre');
   term.style.position = 'relative';
   term.style.zIndex = '10001';
-  term.style.width = '70%';
-  term.style.maxWidth = '900px';
+  term.style.width = '100%';
+  term.style.maxWidth = '1920px';
   term.style.margin = '0 auto 12px';
   term.style.padding = '18px';
   term.style.background = 'rgba(0,0,0,0.6)';
   term.style.color = '#34b1eb';
-  term.style.font = '14px monospace';
+  term.style.font = '30px monospace';
   term.style.borderRadius = '6px';
   term.style.overflow = 'hidden';
   term.style.minHeight = '120px';
@@ -219,8 +219,8 @@
   termWrap.style.display = 'flex';
   termWrap.style.flexDirection = 'column';
   termWrap.style.alignItems = 'flex-start'; // left-align children
-  termWrap.style.width = '70%';
-  termWrap.style.maxWidth = '900px';
+  termWrap.style.width = '100%';
+  termWrap.style.maxWidth = '1920px';
   termWrap.style.margin = '0 auto';
   termWrap.appendChild(term);
   // small container for the button, left-aligned with the terminal text
@@ -961,3 +961,4 @@
   </script>
 </body>
 </html>
+
